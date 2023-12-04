@@ -1,4 +1,4 @@
-let matcher = /(?<symbol>[^.\w\s\d])/g;
+let matcher = /(?<symbol>\*)/g;
 const adjacent = [
   [-1, -1],
   [-1, 0],
@@ -12,11 +12,12 @@ const adjacent = [
 function processInformation(data: string) {
   let lineNumber = 0;
   let rows = data.split("\n");
-  let partNumbers: number[] = [];
+  let total = 0;
   for (const line of rows) {
     let match: RegExpExecArray | null;
     while ((match = matcher.exec(line))) {
       const processed = new Set();
+      const foundNumbers: number[] = [];
       adjacent.forEach((element) => {
         const row = element[0] + lineNumber;
         const column = element[1] + match!.index;
@@ -40,14 +41,17 @@ function processInformation(data: string) {
             processed.add(`${row},${columnWalker}`);
             foundNumber = foundNumber + rows[row][columnWalker];
           }
-          partNumbers.push(+foundNumber);
+          foundNumbers.push(+foundNumber);
         }
       });
+      if (foundNumbers.length === 2) {
+        total += foundNumbers[0] * foundNumbers[1];
+      }
     }
     matcher.lastIndex = 0;
     lineNumber++;
   }
-  return partNumbers.reduce((agg, val) => agg + val, 0);
+  return total;
 }
 
 console.log(
