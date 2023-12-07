@@ -37,8 +37,10 @@ function processData(data: string) {
   }
   let min = Infinity;
   for (const [seedStart, seedEnd] of seedChunks) {
+    console.log("seed start");
     for (let seed = seedStart; seed < seedStart + seedEnd; seed++) {
       let value = +seed;
+      console.log(seedStart + seedEnd - seed);
       for (const step of steps) {
         for (const [destination, source, range] of plantMap[step]) {
           if (value >= source && value <= source + range) {
@@ -51,6 +53,7 @@ function processData(data: string) {
         min = value;
       }
     }
+    console.log("seed end");
   }
   return min;
 }
